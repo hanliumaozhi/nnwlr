@@ -20,7 +20,8 @@ def main():
     with open("../data/1.csv", "w") as fp:
         for i in range(len(data_list)):
             fp.write(data_list[i])
-            fp.write("\n")
+            if i != (len(data_list) - 1):
+                fp.write("\n")
 
 
 if __name__ == '__main__':
