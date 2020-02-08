@@ -30,7 +30,7 @@ def main():
             tem_list.append(str(abs_time))
         for j in range(3, item_len):
             tem_list.append(raw_data_list[i][j])
-        cal_list.append(','.join(tem_list))
+        cal_list.append(','.join(tem_list)) 
 
     with open("../data/test_set.csv", "w") as fp:
         write_str = '\n'.join(cal_list)
