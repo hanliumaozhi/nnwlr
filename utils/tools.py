@@ -67,5 +67,34 @@ def test_mul():
     print(z)
 
 
+def get_test_data():
+    raw_data_list = list()
+    test_data_list = list()
+    test_no_list = list()
+    y_hat = list()
+
+    with open("../data/selected_nos.csv") as fp:
+        str_all = fp.read().split(',')
+        for i in range(len(str_all)):
+            test_no_list.append(int(str_all[i]))
+
+    with open("../data/1.csv") as fp:
+        str_all = fp.read()
+        raw_data_list = str_all.split('\n')
+        for i in range(len(raw_data_list)):
+            if i in test_no_list:
+                test_data_list.append(raw_data_list[i].split(','))
+
+    with open("../output/test_data.csv") as fp:
+        tmp_list = fp.read().split(",")
+        for i in range(len(tmp_list)):
+            test_data_list[i].append(tmp_list[i])
+            test_data_list[i] = ','.join(test_data_list[i])
+
+    with open("../output/test_data_all.csv", "w") as fp:
+        str_all = '\n'.join(test_data_list)
+        fp.write(str_all)
+
+
 if __name__ == '__main__':
-    test_mul()
+    get_test_data()
