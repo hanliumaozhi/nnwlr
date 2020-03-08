@@ -14,10 +14,10 @@ def main():
 
     # use gpu
     use_cuda = True
-    sub_nn_data, lr_data, target_y, sub_nn_len = get_train_set('data/train_set.csv', use_cuda)
-    sub_nn_data_t, lr_data_t, target_y_t, sub_nn_len_t = get_train_set('data/test_set.csv', use_cuda)
+    sub_nn_data, lr_data, target_y, sub_nn_len, ng_data = get_train_set('data/train_set.csv', use_cuda)
+    sub_nn_data_t, lr_data_t, target_y_t, sub_nn_len_t, ng_data_t = get_train_set('data/test_set.csv', use_cuda)
 
-    model = GeoTimWR(sub_nn_len, 7, use_cuda)
+    model = GeoTimWR(sub_nn_len, 7, use_cuda, 5)
     model.cuda()
 
     loss_f = torch.nn.MSELoss()
@@ -31,7 +31,7 @@ def main():
 
     for epoch in range(epochs):
         model.train()
-        output = model(sub_nn_data, lr_data)
+        output = model(sub_nn_data, lr_data, ng_data)
         loss = loss_f(output, target_y)
         optimizer.zero_grad()
         loss.backward()
@@ -40,7 +40,7 @@ def main():
 
         with torch.no_grad():
             model.eval()
-            output = model(sub_nn_data_t, lr_data_t)
+            output = model(sub_nn_data_t, lr_data_t, ng_data_t )
             loss = loss_ff(output, target_y_t)
             test_loss_data.append(loss.item())
         if epoch % 10 == 0:

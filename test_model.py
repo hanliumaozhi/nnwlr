@@ -7,9 +7,9 @@ from model.GTNNWR import GeoTimWR
 def main():
     # torch.manual_seed(35545)
     use_cuda = True
-    sub_nn_data, lr_data, target_y, sub_nn_len = get_train_set('data/test_set.csv', use_cuda)
+    sub_nn_data, lr_data, target_y, sub_nn_len, ng_data = get_train_set('data/test_set.csv', use_cuda)
 
-    model = GeoTimWR(sub_nn_len, 7, use_cuda)
+    model = GeoTimWR(sub_nn_len, 7, use_cuda, 5)
     model.cuda()
 
     model.load_state_dict(torch.load("output/Model.DATA"))
@@ -21,7 +21,7 @@ def main():
 
     with torch.no_grad():
         model.eval()
-        y_hat = model(sub_nn_data, lr_data)
+        y_hat = model(sub_nn_data, lr_data, ng_data)
         val_loss = loss_f(y_hat, target_y)
         val_loss = val_loss.item()
         print(val_loss)
@@ -46,7 +46,6 @@ def main():
     with open("output/weight.csv", "w") as fp:
         str_output = '\n'.join(weight_item_list)
         fp.write(str_output)
-
 
 
 if __name__ == '__main__':

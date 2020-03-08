@@ -6,7 +6,7 @@ from model.SpatialTemporalPNN import SpatialTemporalPNN
 
 
 class GeoTimWR(Module):
-    def __init__(self, n_in, n_regress, is_cuda):
+    def __init__(self, n_in, n_regress, is_cuda, n_ng):
         super(GeoTimWR, self).__init__()
         self.hidden1 = nn.Linear(n_in, 400)
         self.hidden2 = nn.Linear(400, 40)
@@ -18,6 +18,7 @@ class GeoTimWR(Module):
         self.is_cuda = is_cuda
         self.construct_sub_nn()
         self.w = torch.nn.Parameter(torch.rand(n_regress))
+        self.w_ng = torch.nn.Parameter(torch.rand(n_ng))
 
         self.init_weight()
 
@@ -45,7 +46,7 @@ class GeoTimWR(Module):
             ret_list.append(tmp_model(sub_nn[i]))
         return ret_list
 
-    def forward(self, sub_nn, lr):
+    def forward(self, sub_nn, lr, ng):
         ret_list = self.sub_nn_f(sub_nn)
         ret_tensor = torch.cat(ret_list, dim=1)
         x = self.bn0(ret_tensor)
@@ -55,10 +56,13 @@ class GeoTimWR(Module):
         x = f.relu(x)
         x = self.out(x)
 
+        ng_y = ng*self.w_ng
+        ng_y = torch.sum(ng_y, dim=1)
+
         lr = lr*x
         y = lr*self.w
         y = torch.sum(y, dim=1)
 
-        return y
+        return y+ng_y
 
 

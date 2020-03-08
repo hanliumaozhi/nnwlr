@@ -25,7 +25,7 @@ def get_feature_no(csv_path):
 @timethis
 def get_train_set(csv_path, is_cuda):
     total_length,  raw_data_list = get_feature_no(csv_path)
-    s_length_double = total_length - 7
+    s_length_double = total_length - (7+5)
     s_length = s_length_double//2
     s_nn_data_dict = dict()
     train_set_length = len(raw_data_list)
@@ -40,24 +40,33 @@ def get_train_set(csv_path, is_cuda):
             s_nn_data_dict[i] = s_nn_data_dict[i].cuda()
 
     lr_tensor = list()
+    ng_tensor = list()
     for i in range(train_set_length):
         # we assume first item is lr offset
         tmp_list = [1]
-        for j in range(s_length_double, (s_length_double+6)):
+        for j in range((s_length_double+5), (s_length_double+6+5)):
             tmp_list.append(float(raw_data_list[i][j]))
+
+        ts_list = list()
+        for j in range(s_length_double, (s_length_double + 5)):
+            ts_list.append(float(raw_data_list[i][j]))
+
+        ng_tensor.append(ts_list)
         lr_tensor.append(tmp_list)
     lr_tensor = torch.FloatTensor(np.array(lr_tensor))
+    ng_tensor = torch.FloatTensor(np.array(ng_tensor))
     if is_cuda:
         lr_tensor = lr_tensor.cuda()
+        ng_tensor = ng_tensor.cuda()
 
     target_y = list()
     for i in range(train_set_length):
-        target_y.append(float(raw_data_list[i][(s_length_double+6)]))
+        target_y.append(float(raw_data_list[i][(s_length_double+6+5)]))
     target_y = torch.FloatTensor(np.array(target_y))
     if is_cuda:
         target_y = target_y.cuda()
 
-    return s_nn_data_dict, lr_tensor, target_y, s_length
+    return s_nn_data_dict, lr_tensor, target_y, s_length, ng_tensor
 
 
 def test_mul():
