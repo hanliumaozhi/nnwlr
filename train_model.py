@@ -32,7 +32,7 @@ def main():
 
     for epoch in range(epochs):
         model.train()
-        output = model(sub_nn_data, lr_data)
+        output, lr_w = model(sub_nn_data, lr_data)
         loss = loss_f(output, target_y)
         optimizer.zero_grad()
         loss.backward()

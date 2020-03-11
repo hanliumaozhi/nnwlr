@@ -2,6 +2,8 @@ from functools import wraps
 import time
 import numpy as np
 import torch
+import xlrd
+import codecs
 
 
 def timethis(func,*args,**kwargs):
@@ -68,32 +70,30 @@ def test_mul():
 
 
 def get_test_data():
-    raw_data_list = list()
-    test_data_list = list()
-    test_no_list = list()
-    y_hat = list()
+    wb = xlrd.open_workbook("../data/p.xlsx")
+    sheet = wb.sheet_by_index(0)
+    total_row_num = sheet.nrows
+    total_col_num = sheet.ncols
 
-    with open("../data/selected_nos.csv") as fp:
-        str_all = fp.read().split(',')
-        for i in range(len(str_all)):
-            test_no_list.append(int(str_all[i]))
+    data_list = list()
+    # read data from excel
+    for i in range(1, total_row_num):
+        tem_list = list()
+        for j in range(total_col_num):
+            tem_list.append(str(sheet.cell_value(i, j)))
+        data_list.append(','.join(tem_list))
 
-    with open("../data/1.csv") as fp:
-        str_all = fp.read()
-        raw_data_list = str_all.split('\n')
-        for i in range(len(raw_data_list)):
-            if i in test_no_list:
-                test_data_list.append(raw_data_list[i].split(','))
+    additional_data = list()
+    with open("../output/p_data.csv") as fp:
+        additional_data = fp.read().split("\n")
+    print(len(additional_data), len(data_list))
+    for i in range(len(data_list)):
+        data_list[i] = data_list[i] + ',' + additional_data[i]
 
-    with open("../output/test_data.csv") as fp:
-        tmp_list = fp.read().split(",")
-        for i in range(len(tmp_list)):
-            test_data_list[i].append(tmp_list[i])
-            test_data_list[i] = ','.join(test_data_list[i])
-
-    with open("../output/test_data_all.csv", "w") as fp:
-        str_all = '\n'.join(test_data_list)
-        fp.write(str_all)
+    fp = codecs.open("../output/p_g.csv", "w", "utf-8")
+    write_str = '\n'.join(data_list)
+    fp.write(write_str)
+    fp.close()
 
 
 if __name__ == '__main__':

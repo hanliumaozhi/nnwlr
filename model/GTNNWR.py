@@ -59,6 +59,6 @@ class GeoTimWR(Module):
         y = lr*self.w
         y = torch.sum(y, dim=1)
 
-        return y
+        return y, x
 
 
