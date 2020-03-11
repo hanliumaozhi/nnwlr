@@ -23,7 +23,7 @@ def main():
 
     loss_f = torch.nn.MSELoss()
     loss_ff = torch.nn.MSELoss()
-    optimizer = torch.optim.SGD(model.parameters(), lr=1e-9, momentum=0.5)
+    optimizer = torch.optim.SGD(model.parameters(), lr=1e-4, momentum=0.9)
 
     epochs = 3000
 

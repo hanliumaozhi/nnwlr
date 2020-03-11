@@ -2,7 +2,7 @@ import xlrd
 
 
 def main():
-    wb = xlrd.open_workbook("../data/n_train_set.xlsx")
+    wb = xlrd.open_workbook("../data/nn_train_set.xlsx")
     sheet = wb.sheet_by_index(0)
     total_row_num = sheet.nrows
     total_col_num = sheet.ncols
@@ -24,7 +24,7 @@ def main():
             if i != (len(data_list) - 1):
                 fp.write("\n")
 
-    wb = xlrd.open_workbook("../data/n_test_set.xlsx")
+    wb = xlrd.open_workbook("../data/nn_test_set.xlsx")
     sheet = wb.sheet_by_index(0)
     total_row_num = sheet.nrows
     total_col_num = sheet.ncols
@@ -46,7 +46,7 @@ def main():
             if i != (len(data_list) - 1):
                 fp.write("\n")
 
-    wb = xlrd.open_workbook("../data/vali.xlsx")
+    wb = xlrd.open_workbook("../data/nn_vali.xlsx")
     sheet = wb.sheet_by_index(0)
     total_row_num = sheet.nrows
     total_col_num = sheet.ncols
