@@ -7,7 +7,7 @@ from model.GTNNWR import GeoTimWR
 def main():
     # torch.manual_seed(35545)
     use_cuda = True
-    sub_nn_data, lr_data, target_y, sub_nn_len = get_train_set('data/test_set.csv', use_cuda)
+    sub_nn_data, lr_data, target_y, sub_nn_len = get_train_set('data/validate_set.csv', use_cuda)
 
     model = GeoTimWR(sub_nn_len, 7, use_cuda)
     model.cuda()
@@ -46,7 +46,6 @@ def main():
     with open("output/weight.csv", "w") as fp:
         str_output = '\n'.join(weight_item_list)
         fp.write(str_output)
-
 
 
 if __name__ == '__main__':
