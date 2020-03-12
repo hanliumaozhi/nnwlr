@@ -15,7 +15,9 @@ def main():
     # use gpu
     use_cuda = True
     sub_nn_data, lr_data, target_y, sub_nn_len, ng_data = get_train_set('data/train_set.csv', use_cuda)
-    sub_nn_data_t, lr_data_t, target_y_t, sub_nn_len_t, ng_data_t = get_train_set('data/test_set.csv', use_cuda)
+    print(sub_nn_len)
+    sub_nn_data_t, lr_data_t, target_y_t, sub_nn_len_t, ng_data_t = get_train_set('data/vali_set.csv', use_cuda)
+    print(sub_nn_len)
 
     model = GeoTimWR(sub_nn_len, 7, use_cuda, 5)
     model.cuda()
@@ -45,7 +47,7 @@ def main():
             test_loss_data.append(loss.item())
         if epoch % 10 == 0:
             print(epoch)
-            p_str = "train_{}, test_{}".format(loss_data[epoch], test_loss_data[epoch])
+            p_str = "train_{}, vali_{}".format(loss_data[epoch], test_loss_data[epoch])
             print(p_str)
 
     torch.save(model.state_dict(), "output/Model.DATA")
@@ -62,7 +64,7 @@ def main():
         loss_data_str = ','.join(loss_data_str)
         fp.write(loss_data_str)
 
-    with open("output/loss_test_data.csv", "w") as fp:
+    with open("output/loss_vali_data.csv", "w") as fp:
         loss_data_str = list()
         for i in test_loss_data:
             loss_data_str.append(str(i))
