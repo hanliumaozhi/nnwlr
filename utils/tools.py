@@ -96,5 +96,52 @@ def get_test_data():
     fp.close()
 
 
+def import_all_data():
+    test_nos = list()
+    with open("../data/selected_nos.csv") as fp:
+        test_nos = fp.read().split(',')
+
+    data_train = list()
+    with open("../output/train_data.csv") as fp:
+        data_train = fp.read().split('\n')
+
+    data_test = list()
+    with open("../output/test_data.csv") as fp:
+        data_test = fp.read().split('\n')
+
+    for i in range(len(test_nos)):
+        test_nos[i] = int(test_nos[i])
+
+    test_nos.sort()
+
+    wb = xlrd.open_workbook("../data/newll.xlsx")
+    sheet = wb.sheet_by_index(0)
+    total_row_num = sheet.nrows
+    total_col_num = sheet.ncols
+
+    data_list = list()
+    # read data from excel
+    for i in range(1, total_row_num):
+        tem_list = list()
+        for j in range(total_col_num):
+            tem_list.append(str(sheet.cell_value(i, j)))
+        data_list.append(','.join(tem_list))
+
+    test_index = 0
+    train_index = 0
+    for i in range(len(data_list)):
+        if i in test_nos:
+            data_list[i] = data_list[i] + ',' + data_test[test_index]
+            test_index = test_index + 1
+        else:
+            data_list[i] = data_list[i] + ',' + data_train[train_index]
+            train_index = train_index + 1
+
+    fp = codecs.open("../output/all_g.csv", "w", "utf-8")
+    write_str = '\n'.join(data_list)
+    fp.write(write_str)
+    fp.close()
+
+
 if __name__ == '__main__':
-    get_test_data()
+    import_all_data()

@@ -8,7 +8,7 @@ def main():
 
     data_train = list()
     data_test = list()
-    with open("../data/1.csv") as fp:
+    with open("../data/m_data.csv") as fp:
         data_all_list = fp.read().split("\n")
 
         for index, item in enumerate(data_all_list):

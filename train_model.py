@@ -10,13 +10,15 @@ import numpy as np
 
 def main():
     # manual rand
-    torch.manual_seed(35545)
+    torch.manual_seed(35544235435)
 
     # use gpu
     use_cuda = True
     sub_nn_data, lr_data, target_y, sub_nn_len = get_train_set('data/train_set.csv', use_cuda)
     sub_nn_data_t, lr_data_t, target_y_t, sub_nn_len_t = get_train_set('data/test_set.csv', use_cuda)
-    sub_nn_data_v, lr_data_v, target_y_v, sub_nn_len_v = get_train_set('data/validate_set.csv', use_cuda)
+
+    print(sub_nn_len)
+    print(sub_nn_len_t)
 
     model = GeoTimWR(sub_nn_len, 7, use_cuda)
     model.cuda()
@@ -41,8 +43,8 @@ def main():
 
         with torch.no_grad():
             model.eval()
-            output = model(sub_nn_data_v, lr_data_v)
-            loss = loss_ff(output, target_y_v)
+            output_t, lr_x = model(sub_nn_data_t, lr_data_t)
+            loss = loss_ff(output_t, target_y_t)
             validation_loss_data.append(loss.item())
         if epoch % 10 == 0:
             print(epoch)
@@ -63,9 +65,9 @@ def main():
         loss_data_str = ','.join(loss_data_str)
         fp.write(loss_data_str)
 
-    with open("output/loss_validation_data.csv", "w") as fp:
+    with open("output/loss_test_data.csv", "w") as fp:
         loss_data_str = list()
-        for i in test_loss_data:
+        for i in validation_loss_data:
             loss_data_str.append(str(i))
         loss_data_str = ','.join(loss_data_str)
         fp.write(loss_data_str)
