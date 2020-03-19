@@ -20,7 +20,7 @@ def main():
     print(sub_nn_len)
     print(sub_nn_len_t)
 
-    model = GeoTimWR(sub_nn_len, 7, use_cuda)
+    model = GeoTimWR(sub_nn_len, 8, use_cuda)
     model.cuda()
 
     loss_f = torch.nn.MSELoss()

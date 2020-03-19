@@ -12,8 +12,9 @@ def main():
     for i in range(1, total_row_num):
         tem_list = list()
         for j in range(total_col_num):
-            if not any(j == k for k in [2, 3, 4, 13]):
+            if not any(j == k for k in [2, 3, 4]):
                 tem_list.append(str(sheet.cell_value(i, j)))
+        tem_list[10], tem_list[9] = tem_list[9], tem_list[10]
         data_list.append(','.join(tem_list))
 
     # write data to csv

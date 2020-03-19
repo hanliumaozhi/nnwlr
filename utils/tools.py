@@ -27,7 +27,7 @@ def get_feature_no(csv_path):
 @timethis
 def get_train_set(csv_path, is_cuda):
     total_length,  raw_data_list = get_feature_no(csv_path)
-    s_length_double = total_length - 7
+    s_length_double = total_length - 8
     s_length = s_length_double//2
     s_nn_data_dict = dict()
     train_set_length = len(raw_data_list)
@@ -45,8 +45,11 @@ def get_train_set(csv_path, is_cuda):
     for i in range(train_set_length):
         # we assume first item is lr offset
         tmp_list = [1]
-        for j in range(s_length_double, (s_length_double+6)):
-            tmp_list.append(float(raw_data_list[i][j]))
+        for j in range(s_length_double, (s_length_double+7)):
+            try:
+                tmp_list.append(float(raw_data_list[i][j]))
+            except:
+                tmp_list.append(0.0)
         lr_tensor.append(tmp_list)
     lr_tensor = torch.FloatTensor(np.array(lr_tensor))
     if is_cuda:
@@ -54,7 +57,7 @@ def get_train_set(csv_path, is_cuda):
 
     target_y = list()
     for i in range(train_set_length):
-        target_y.append(float(raw_data_list[i][(s_length_double+6)]))
+        target_y.append(float(raw_data_list[i][(s_length_double+7)]))
     target_y = torch.FloatTensor(np.array(target_y))
     if is_cuda:
         target_y = target_y.cuda()

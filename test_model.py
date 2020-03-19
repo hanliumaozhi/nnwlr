@@ -7,9 +7,9 @@ from model.GTNNWR import GeoTimWR
 def main():
     # torch.manual_seed(35545)
     use_cuda = True
-    sub_nn_data, lr_data, target_y, sub_nn_len = get_train_set('data/train_set.csv', use_cuda)
+    sub_nn_data, lr_data, target_y, sub_nn_len = get_train_set('data/test_set.csv', use_cuda)
 
-    model = GeoTimWR(sub_nn_len, 7, use_cuda)
+    model = GeoTimWR(sub_nn_len, 8, use_cuda)
     model.cuda()
 
     model.load_state_dict(torch.load("output/Model.DATA"))
@@ -27,7 +27,7 @@ def main():
         print(val_loss)
         lr_ww = lr_w.cpu().numpy()
 
-    with open("output/train_data.csv", "w") as fp:
+    with open("output/test_data.csv", "w") as fp:
 
         str_list = list()
         for i in range(len(lr_ww)):
